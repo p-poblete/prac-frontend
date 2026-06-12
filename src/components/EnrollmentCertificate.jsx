@@ -121,14 +121,15 @@ const EnrollmentCertificate = () => {
       <div style={styles.header}>
         <GraduationCap size={40} color="#fff" />
         <div>
-          <h1 style={styles.title}>SISACAD - CONSTANCIA DE MATRÍCULA</h1>
+          <h1 style={styles.title}>CONSTANCIA DE MATRÍCULA</h1>
+          <h2 style={styles.subtitle}>Escuela Profesional de Ingeniería de Sistemas EPIS</h2>
           <p style={styles.subtitle}>Fecha de Emisión: {fechaRegistro}</p>
         </div>
       </div>
 
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>
-          <User size={20} style={{ marginRight: 8 }} /> Datos del Estudiante
+          Datos del Estudiante
         </h2>
         <div style={styles.grid}>
           <p><strong>Nombre Completo:</strong> {estudiante?.full_name || 'No provisto'}</p>
@@ -139,7 +140,7 @@ const EnrollmentCertificate = () => {
 
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>
-          <BookOpen size={20} style={{ marginRight: 8 }} /> Asignaturas Registradas
+          Asignaturas Registradas
         </h2>
         <table style={styles.table}>
           <thead>
@@ -174,10 +175,6 @@ const EnrollmentCertificate = () => {
             })}
           </tbody>
         </table>
-      </div>
-
-      <div style={styles.footer}>
-        <p>Documento oficial generado digitalmente mediante API REST Framework (ReadOnly)</p>
       </div>
     </div>
   );

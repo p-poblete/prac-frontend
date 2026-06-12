@@ -184,7 +184,7 @@ const styles = {
   header: { display: 'flex', alignItems: 'center', gap: '20px', backgroundColor: '#1e3a8a', color: '#fff', padding: '20px', borderRadius: '8px 8px 0 0' },
   title: { margin: 0, fontSize: '22px', letterSpacing: '0.5px' },
   subtitle: { margin: '5px 0 0 0', opacity: 0.9 },
-  section: { marginTop: '25px', paddingBottom: '15px', borderBottom: '1px solid #e5e7eb' },
+  section: { marginTop: '25px', paddingBottom: '15px', borderBottom: '1px solid #e5e7eb', color: 'black'},
   sectionTitle: { display: 'flex', alignItems: 'center', color: '#1e3a8a', fontSize: '18px', margin: '0 0 15px 0' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', backgroundColor: '#f3f4f6', padding: '15px', borderRadius: '6px' },
   table: { width: '100%', borderCollapse: 'collapse', marginTop: '10px' },

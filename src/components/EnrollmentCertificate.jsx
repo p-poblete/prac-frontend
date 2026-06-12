@@ -119,7 +119,6 @@ const EnrollmentCertificate = () => {
       )}
 
       <div style={styles.header}>
-        <GraduationCap size={40} color="#fff" />
         <div>
           <h1 style={styles.title}>CONSTANCIA DE MATRÍCULA</h1>
           <h2 style={styles.subtitle}>Escuela Profesional de Ingeniería de Sistemas EPIS</h2>

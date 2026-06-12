@@ -7,7 +7,13 @@ const EnrollmentCertificate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = 'https://sisacad-enrollments-backend.vercel.app/restful/enrollment-certificate/?cui=20250102';
+  // 1. CAPTURAR EL CUI DESDE LA URL DEL NAVEGADOR (?cui=XXXXXXXX)
+  const queryParams = new URLSearchParams(window.location.search);
+  // Si no hay CUI en la URL, usamos '20250102' como respaldo (fallback)
+  const cuiParam = queryParams.get('cui') || '20250102'; 
+
+  // 2. CONSTRUIR LA URL DE LA API DINÁMICAMENTE
+  const API_URL = `https://sisacad-enrollments-backend.vercel.app/restful/enrollment-certificate/?cui=${cuiParam}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,7 +21,6 @@ const EnrollmentCertificate = () => {
         setLoading(true);
         const response = await axios.get(API_URL);
         
-        // Guardamos los resultados (el array de matrículas)
         if (response.data && response.data.results) {
           setRawData(response.data.results);
         } else {
@@ -24,20 +29,20 @@ const EnrollmentCertificate = () => {
         setError(null);
       } catch (err) {
         console.error("Error al consumir la API:", err);
-        setError("No se pudo conectar con el servidor o el CUI no existe.");
+        setError("No se pudo conectar con el servidor o el CUI especificado no existe.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [API_URL]); // Se vuelve a ejecutar si cambia la API_URL
 
   if (loading) {
     return (
       <div style={styles.centerContainer}>
         <Loader style={styles.spinner} />
-        <p>Cargando Constancia de Matrícula desde la API...</p>
+        <p>Cargando Constancia de Matrícula para el CUI: {cuiParam}...</p>
       </div>
     );
   }
@@ -47,33 +52,31 @@ const EnrollmentCertificate = () => {
       <div style={styles.centerContainer}>
         <AlertCircle style={{ color: '#dc2626' }} size={48} />
         <p style={{ color: '#dc2626', fontWeight: 'bold' }}>
-          {error || "No se encontraron registros de matrícula para el CUI especificado."}
+          {error || `No se encontraron registros de matrícula para el CUI: ${cuiParam}`}
+        </p>
+        <p style={{ fontSize: '13px', color: '#6b7280' }}>
+          Asegúrate de pasar un parámetro válido en la URL. Ej: ?cui=20250102
         </p>
       </div>
     );
   }
 
-  // Como los datos del estudiante se repiten en cada registro, los extraemos del primero
   const estudiante = rawData[0]?.student;
-  
-  // Extraemos la fecha de creación global o del primer registro
   const fechaRegistro = rawData[0]?.created ? new Date(rawData[0].created).toLocaleDateString() : 'Reciente';
 
   return (
     <div style={styles.card}>
-      {/* Encabezado de la Constancia */}
       <div style={styles.header}>
+        <GraduationCap size={40} color="#fff" />
         <div>
-          <h1 style={styles.title}>CONSTANCIA DE MATRÍCULA DE LABORATORIO</h1>
-          <h2 style={styles.subtitle}>Escuela Profesional de Ingeniería de Sistemas EPIS</h2>
+          <h1 style={styles.title}>SISACAD - CONSTANCIA DE MATRÍCULA</h1>
           <p style={styles.subtitle}>Fecha de Emisión: {fechaRegistro}</p>
         </div>
       </div>
 
-      {/* Información del Estudiante (Datos Anizados Estratégicos) */}
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>
-          Datos del Estudiante
+          <User size={20} style={{ marginRight: 8 }} /> Datos del Estudiante
         </h2>
         <div style={styles.grid}>
           <p><strong>Nombre Completo:</strong> {estudiante?.full_name || 'No provisto'}</p>
@@ -82,10 +85,9 @@ const EnrollmentCertificate = () => {
         </div>
       </div>
 
-      {/* Detalle de Cursos Matriculados */}
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>
-          Asignaturas Registradas
+          <BookOpen size={20} style={{ marginRight: 8 }} /> Asignaturas Registradas
         </h2>
         <table style={styles.table}>
           <thead>
@@ -122,17 +124,19 @@ const EnrollmentCertificate = () => {
         </table>
       </div>
 
+      <div style={styles.footer}>
+        <p>Documento oficial generado digitalmente mediante API REST Framework (ReadOnly)</p>
+      </div>
     </div>
   );
 };
 
-// Estilos del componente
 const styles = {
   card: { maxWidth: '850px', margin: '30px auto', padding: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)', borderRadius: '12px', backgroundColor: '#fff', fontFamily: 'Arial, sans-serif' },
   header: { display: 'flex', alignItems: 'center', gap: '20px', backgroundColor: '#1e3a8a', color: '#fff', padding: '20px', borderRadius: '8px 8px 0 0' },
   title: { margin: 0, fontSize: '22px', letterSpacing: '0.5px' },
   subtitle: { margin: '5px 0 0 0', opacity: 0.9 },
-  section: { marginTop: '25px', paddingBottom: '15px', borderBottom: '1px solid #e5e7eb', color: 'black'},
+  section: { marginTop: '25px', paddingBottom: '15px', borderBottom: '1px solid #e5e7eb' },
   sectionTitle: { display: 'flex', alignItems: 'center', color: '#1e3a8a', fontSize: '18px', margin: '0 0 15px 0' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', backgroundColor: '#f3f4f6', padding: '15px', borderRadius: '6px' },
   table: { width: '100%', borderCollapse: 'collapse', marginTop: '10px' },
@@ -141,7 +145,7 @@ const styles = {
   td: { padding: '12px', borderBottom: '1px solid #e5e7eb', color: '#4b5563', fontSize: '14px' },
   trEven: { backgroundColor: '#f9fafb' },
   centerContainer: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '50vh', gap: '10px', fontFamily: 'Arial' },
-  spinner: { width: '40px', height: '40px', color: '#1e3a8a', animation: 'spin 1s linear infinite' },
+  spinner: { width: '40px', height: '40px', color: '#1e3a8a' },
   footer: { textAlign: 'center', marginTop: '20px', fontSize: '12px', color: '#9ca3af', fontStyle: 'italic' }
 };
 

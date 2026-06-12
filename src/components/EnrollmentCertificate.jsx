@@ -7,7 +7,7 @@ const EnrollmentCertificate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = 'https://sisacad-enrollments-backend.vercel.app/restful/enrollment-certificate/?cui=20250100';
+  const API_URL = 'https://sisacad-enrollments-backend.vercel.app/restful/enrollment-certificate/?cui=20250102';
 
   useEffect(() => {
     const fetchData = async () => {
